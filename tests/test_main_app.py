@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 import tkinter as tk
 from src.main_app import VoiceControlApp
+from speech_recognition import AudioSource
 
 @pytest.fixture
 def app():
@@ -11,7 +12,15 @@ def app():
     """
     with patch('tkinter.Tk') as mock_tk, \
          patch('threading.Thread'), \
-         patch('speech_recognition.Microphone'):
+         patch('speech_recognition.Microphone') as mock_microphone:
+        # Configure the mock to return a valid AudioSource object with all required attributes
+        mock_audio_source = MagicMock(spec=AudioSource)
+        mock_audio_source.stream = MagicMock()
+        mock_audio_source.stream.read.return_value = b''  # Return bytes
+        mock_audio_source.CHUNK = 1024
+        mock_audio_source.SAMPLE_RATE = 44100
+        mock_audio_source.SAMPLE_WIDTH = 2
+        mock_microphone.return_value.__enter__.return_value = mock_audio_source
         root = mock_tk()
         app = VoiceControlApp(root)
         yield app

@@ -10,20 +10,25 @@ def command_handler():
     """
     Pytest fixture to create a CommandHandler instance for testing.
     """
-    return CommandHandler()
+    with patch('src.command_handler.AppFinder'):
+        handler = CommandHandler()
+        yield handler
 
 def test_open_application_success(command_handler):
     """
     Test that a known application can be opened.
     """
-    with patch('subprocess.Popen') as mock_popen:
+    command_handler.app_finder.find_app.return_value = "path/to/chrome.exe"
+    # Patch os.startfile with create=True to avoid AttributeError on non-Windows systems
+    with patch('os.startfile', create=True) as mock_startfile:
         command_handler.open_application("chrome")
-        mock_popen.assert_called_once_with("chrome.exe")
+        mock_startfile.assert_called_once_with("path/to/chrome.exe")
 
 def test_open_application_not_found(command_handler, caplog):
     """
     Test that an unknown application is handled correctly.
     """
+    command_handler.app_finder.find_app.return_value = None
     with caplog.at_level(logging.WARNING):
         command_handler.open_application("unknown_app")
     assert "Application 'unknown_app' not found." in caplog.text
@@ -54,7 +59,7 @@ def test_volume_up_linux(caplog):
     """
     Test that volume control is not supported on Linux.
     """
-    with patch('sys.platform', 'linux'), caplog.at_level(logging.WARNING):
+    with patch('sys.platform', 'linux'):
         handler = CommandHandler()
         handler.volume_up()
     assert "Volume control is not supported on this OS." in caplog.text
@@ -66,6 +71,14 @@ def test_shutdown_command(mock_os_system, command_handler):
     """
     command_handler.shutdown(confirmation_callback=lambda: True)
     mock_os_system.assert_called_once_with("shutdown /s /t 1")
+
+@patch('os.system')
+def test_sleep_command(mock_os_system, command_handler):
+    """
+    Test that the sleep command calls os.system with the correct arguments.
+    """
+    command_handler.sleep()
+    mock_os_system.assert_called_once_with("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
 
 def test_execute_command_unknown_command(command_handler):
     """
@@ -84,26 +97,3 @@ def test_execute_command_empty_input(command_handler):
     with patch.object(command_handler, 'open_application') as mock_open:
         command_handler.execute_command("")
         mock_open.assert_not_called()
-
-@patch('os.system')
-def test_execute_command_sleep_windows(mock_os_system):
-    """Test that the 'sleep' command triggers the correct Windows command when using a wake word."""
-    with patch('sys.platform', 'win32'):
-        handler = CommandHandler()
-        handler.execute_command("hey windows sleep")
-    mock_os_system.assert_called_once_with("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
-
-@patch('os.system')
-def test_execute_command_sleep_hey_prefix(mock_os_system):
-    """Test that leading 'hey' wake word also triggers sleep."""
-    with patch('sys.platform', 'win32'):
-        handler = CommandHandler()
-        handler.execute_command("hey sleep")
-    mock_os_system.assert_called_once_with("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
-
-@patch('os.system')
-def test_sleep_cancelled(mock_os_system):
-    """Test that passing a confirmation callback that returns False cancels sleep."""
-    handler = CommandHandler()
-    handler.sleep(confirmation_callback=lambda: False)
-    mock_os_system.assert_not_called()

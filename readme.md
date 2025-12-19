@@ -2,13 +2,15 @@
 
 Welcome! This is a simple application that lets you control your Windows computer using your voice. You can open programs, change the volume, and even shut down or restart your computer, all by speaking to it.
 
+![Application Screenshot](https://i.imgur.com/your-screenshot.png) <!-- Placeholder for a screenshot -->
+
 ## For Everyone: How to Get Started
 
-Getting the application running is simple. You don't need to install anything!
+Getting the application running is as simple as possible. You don't need to install anything!
 
-1.  **Find the Application:** Look for the `dist` folder in the project files. Inside that, you will find a folder named `VoiceControlApp`.
-2.  **Run the Executable:** Open the `dist/VoiceControlApp` folder. Inside, you will see a file named `VoiceControlApp.exe`. Just double-click it to start the application.
-3.  **Start Speaking:** A small window will appear with a real-time log. The application is now listening! When you first start it, it will take a moment to scan your computer for installed programs.
+1.  **Find the Executable:** Look for the `dist` folder in the project files.
+2.  **Run the Application:** Inside the `dist` folder, you will find a single file named `VoiceControlApp.exe`. Just double-click it to start the application.
+3.  **Start Speaking:** A small window will appear with a real-time log. The application is now listening! The first time you run it, it may take a few extra seconds to start up and scan your computer for installed programs.
 
 ### How to Use the Application
 
@@ -75,4 +77,4 @@ To package the application into a standalone `.exe` file, simply run the build s
 ```bash
 build.bat
 ```
-This script will handle creating a virtual environment, installing dependencies, and running PyInstaller. The final executable and all its supporting files will be located in the `dist/VoiceControlApp` directory.
+This script will handle creating a virtual environment, installing dependencies, and running PyInstaller. The final `VoiceControlApp.exe` file will be located in the `dist` directory.
