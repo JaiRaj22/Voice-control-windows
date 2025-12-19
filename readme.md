@@ -1,4 +1,4 @@
-# Voice Control for Your Laptop
+# Voice Control for windows
 
 Welcome! This is a simple application that lets you control your Windows computer using your voice. You can open programs, change the volume, and even shut down or restart your computer, all by speaking to it.
 
@@ -19,19 +19,19 @@ The application listens for a special wake word: **"hey system"**. You must say 
 Here are some examples of commands you can use:
 
 *   **Open an Application:** The application automatically finds most of your installed programs. Just say the name of the program you want to open.
-    *   `"hey system, open notepad"`
-    *   `"hey system, open chrome"`
-    *   `"hey system, open spotify"`
+    *   `"hey windows, open notepad"`
+    *   `"hey windows, open chrome"`
+    *   `"hey windows, open spotify"`
 
 *   **Control the Volume:**
-    *   `"hey system, volume up"` (Increases volume by 10%)
-    *   `"hey system, volume down"` (Decreases volume by 10%)
-    *   `"hey system, mute"` (Toggles mute)
+    *   `"hey windows, volume up"` (Increases volume by 10%)
+    *   `"hey windows, volume down"` (Decreases volume by 10%)
+    *   `"hey windows, mute"` (Toggles mute)
 
 *   **Control Your Computer:**
-    *   `"hey system, sleep"`
-    *   `"hey system, shutdown"`
-    *   `"hey system, restart"`
+    *   `"hey windows, sleep"`
+    *   `"hey windows, shutdown"`
+    *   `"hey windows, restart"`
 
 **Important:** When you tell the system to shut down or restart, a confirmation box will pop up to make sure you don't do it by accident. The "sleep" command does not require confirmation.
 
